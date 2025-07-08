@@ -42,7 +42,8 @@ namespace FootballScoreboard.Tests
         [Test]
         public void StartMatch_WithSameHomeAndAwayTeam_ShouldThrowException()
         {
-            Assert.Throws<ArgumentException>(() => _scoreboard.StartMatch("Mexico", "Mexico"));
+            var ex = Assert.Throws<ArgumentException>(() => _scoreboard.StartMatch("Mexico", "Mexico"));
+            Assert.That(ex.Message, Does.Contain("Home and away teams must be different"));
         }
 
         [Test]
@@ -50,15 +51,23 @@ namespace FootballScoreboard.Tests
         {
             _scoreboard.StartMatch("Mexico", "Canada");
 
-            Assert.Throws<InvalidOperationException>(() => _scoreboard.StartMatch("Mexico", "Canada"));
+            var ex = Assert.Throws<InvalidOperationException>(() => _scoreboard.StartMatch("Mexico", "Canada"));
+            Assert.That(ex.Message, Does.Contain("The match is already in progress"));
+
+            ex = Assert.Throws<InvalidOperationException>(() => _scoreboard.StartMatch("Canada", "Mexico"));
+            Assert.That(ex.Message, Does.Contain("The match is already in progress"));
         }
 
         [Test]
-        public void StartMatch_WithDuplicateHomeOrAwayTeam_ShouldThrowException()
+        public void StartMatch_WithInProgressHomeOrAwayTeam_ShouldThrowException()
         {
             _scoreboard.StartMatch("Mexico", "Canada");
 
-            Assert.Throws<InvalidOperationException>(() => _scoreboard.StartMatch("Mexico", "Brazil"));
+            var ex = Assert.Throws<InvalidOperationException>(() => _scoreboard.StartMatch("Mexico", "Brazil"));
+            Assert.That(ex.Message, Does.Contain("Home team is already in a match"));
+
+            ex = Assert.Throws<InvalidOperationException>(() => _scoreboard.StartMatch("Spain", "Canada"));
+            Assert.That(ex.Message, Does.Contain("Away team is already in a match"));
         }
 
         [Test]
