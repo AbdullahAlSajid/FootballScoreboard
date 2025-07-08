@@ -15,6 +15,8 @@ namespace FootballScoreboard.Tests
             Assert.That(summary.Count, Is.EqualTo(1));
             Assert.That(summary[0].HomeTeam, Is.EqualTo("Mexico"));
             Assert.That(summary[0].AwayTeam, Is.EqualTo("Canada"));
+            Assert.That(summary[0].HomeScore, Is.EqualTo(0));
+            Assert.That(summary[0].AwayScore, Is.EqualTo(0));
         }
     }
 }
