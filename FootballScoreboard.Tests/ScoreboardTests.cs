@@ -11,6 +11,9 @@ namespace FootballScoreboard.Tests
             _scoreboard = new Scoreboard();
         }
 
+        #region StartMatch cases
+
+
         [Test]
         public void StartMatch_WithHomeAndAwayTeam_ShouldAddMatch()
         {
@@ -83,5 +86,44 @@ namespace FootballScoreboard.Tests
             var ex = Assert.Throws<ArgumentException>(() => _scoreboard.StartMatch(homeTeam, awayTeam));
             Assert.That(ex.Message, Does.Contain("team name cannot be null or empty"));
         }
+
+        #endregion
+
+
+        #region UpdateMatch cases
+
+        [Test]
+        public void UpdateScore_WithValidScore_ShouldUpdateMatchScore()
+        {
+            _scoreboard.StartMatch("Mexico", "Canada");
+
+            _scoreboard.UpdateScore("Mexico", "Canada", 2, 1);
+            var summary = _scoreboard.GetSummary();
+
+            Assert.That(summary[0].HomeScore, Is.EqualTo(2));
+            Assert.That(summary[0].AwayScore, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void UpdateScore_WithNonExistentMatch_ShouldThrowException()
+        {
+            var ex = Assert.Throws<InvalidOperationException>(() => _scoreboard.UpdateScore("Mexico", "Canada", 1, 0));
+            Assert.That(ex.Message, Does.Contain("match doesn't exist"));
+
+        }
+
+        [TestCase(-1, 0)]
+        [TestCase(0, -1)]
+        public void UpdateScore_WithNegativeScore_ShouldThrowException(int homeScore, int awayScore)
+        {
+            _scoreboard.StartMatch("Mexico", "Canada");
+
+            var ex= Assert.Throws<ArgumentException>(() => _scoreboard.UpdateScore("Mexico", "Canada", homeScore, awayScore));
+            Assert.That(ex.Message, Does.Contain("can't be negative"));
+        }
+
+        #endregion
+
+
     }
 }
