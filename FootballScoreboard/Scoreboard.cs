@@ -17,6 +17,8 @@ namespace FootballScoreboard
 
         public void UpdateScore(string homeTeam, string awayTeam, int homeScore, int awayScore)
         {
+            ValidateTeamNames(homeTeam, awayTeam);
+
             if (homeScore < 0)
                 throw new ArgumentException("Home score can't be negative");
 

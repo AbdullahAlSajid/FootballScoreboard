@@ -87,6 +87,24 @@ namespace FootballScoreboard.Tests
             Assert.That(ex.Message, Does.Contain("team name cannot be null or empty"));
         }
 
+        [Test]
+        public void StartMatch_WithDifferentCasing_ShouldTreatAsSameMatch()
+        {
+            _scoreboard.StartMatch("Mexico", "Canada");
+
+            var ex = Assert.Throws<InvalidOperationException>(() => _scoreboard.StartMatch("mexico", "canada"));
+            Assert.That(ex.Message, Does.Contain("The match is already in progress"));
+        }
+
+        [Test]
+        public void StartMatch_WithReversedCasing_ShouldTreatAsSameMatch()
+        {
+            _scoreboard.StartMatch("Mexico", "Canada");
+
+            var ex = Assert.Throws<InvalidOperationException>(() => _scoreboard.StartMatch("CANADA", "MEXICO"));
+            Assert.That(ex.Message, Does.Contain("Teams are already playing in a match"));
+        }
+
         #endregion
 
 
@@ -120,6 +138,31 @@ namespace FootballScoreboard.Tests
 
             var ex= Assert.Throws<ArgumentException>(() => _scoreboard.UpdateScore("Mexico", "Canada", homeScore, awayScore));
             Assert.That(ex.Message, Does.Contain("can't be negative"));
+        }
+
+        [TestCase(null, "Canada")]
+        [TestCase("", "Canada")]
+        [TestCase("Mexico", null)]
+        [TestCase("Mexico", "")]
+        public void UpdateMatch_WithInvalidTeams_ShouldThrowException(string? homeTeam, string? awayTeam)
+        {
+            _scoreboard.StartMatch("Mexico", "Canada");
+
+            var ex = Assert.Throws<ArgumentException>(() => _scoreboard.UpdateScore(homeTeam, awayTeam, 1, 0));
+            Assert.That(ex.Message, Does.Contain("team name cannot be null or empty"));
+        }
+
+
+        [Test]
+        public void UpdateScore_WithDifferentCasing_ShouldUpdateExistingMatch()
+        {
+            _scoreboard.StartMatch("Mexico", "Canada");
+
+            _scoreboard.UpdateScore("mexico", "canada", 3, 2);
+
+            var summary = _scoreboard.GetSummary();
+            Assert.That(summary[0].HomeScore, Is.EqualTo(3));
+            Assert.That(summary[0].AwayScore, Is.EqualTo(2));
         }
 
         #endregion
