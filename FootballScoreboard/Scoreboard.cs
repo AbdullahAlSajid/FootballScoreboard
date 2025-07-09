@@ -15,9 +15,37 @@ namespace FootballScoreboard
             _inProgressMatches.Add(match);
         }
 
+        public void UpdateScore(string homeTeam, string awayTeam, int homeScore, int awayScore)
+        {
+            if (homeScore < 0)
+                throw new ArgumentException("Home score can't be negative");
+
+            if (awayScore < 0)
+                throw new ArgumentException("Away score can't be negative");
+
+            var match = FindMatch(homeTeam, awayTeam);
+            if (match == null)
+            {
+                throw new InvalidOperationException("The match doesn't exist");
+            }
+
+            match.UpdateScore(homeScore, awayScore);
+        }
+
         public List<Match> GetSummary()
         {
             return _inProgressMatches;
+        }
+
+        private Match? FindMatch(string homeTeam, string awayTeam)
+        {
+            foreach (var match in _inProgressMatches)
+            {
+                if (match.HomeTeam == homeTeam && match.AwayTeam == awayTeam)
+                    return match;
+            }
+
+            return null;
         }
 
         private void ValidateTeamNames(string homeTeam, string awayTeam)
