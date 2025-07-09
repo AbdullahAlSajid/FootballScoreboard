@@ -47,42 +47,41 @@ namespace FootballScoreboard.Tests
         }
 
         [Test]
-        public void StartMatch_WithDuplicateMatch_ShouldThrowException()
+        public void StartMatch_WithDuplicateHomeAndAwayTeamOfInProgressMatch_ShouldThrowException()
         {
             _scoreboard.StartMatch("Mexico", "Canada");
 
             var ex = Assert.Throws<InvalidOperationException>(() => _scoreboard.StartMatch("Mexico", "Canada"));
             Assert.That(ex.Message, Does.Contain("The match is already in progress"));
-
-            ex = Assert.Throws<InvalidOperationException>(() => _scoreboard.StartMatch("Canada", "Mexico"));
-            Assert.That(ex.Message, Does.Contain("The match is already in progress"));
         }
 
         [Test]
-        public void StartMatch_WithInProgressHomeOrAwayTeam_ShouldThrowException()
+        public void StartMatch_WithReversedHomeAndAwayTeamOfInProgressMatch_ShouldThrowException()
         {
             _scoreboard.StartMatch("Mexico", "Canada");
 
-            var ex = Assert.Throws<InvalidOperationException>(() => _scoreboard.StartMatch("Mexico", "Brazil"));
-            Assert.That(ex.Message, Does.Contain("Home team is already in a match"));
-
-            ex = Assert.Throws<InvalidOperationException>(() => _scoreboard.StartMatch("Spain", "Canada"));
-            Assert.That(ex.Message, Does.Contain("Away team is already in a match"));
+            var ex = Assert.Throws<InvalidOperationException>(() => _scoreboard.StartMatch("Canada", "Mexico"));
+            Assert.That(ex.Message, Does.Contain("Teams are already playing in a match"));
         }
 
-        [Test]
-        public void StartMatch_WithNullHomeTeam_ShouldThrowException()
+        [TestCase("Mexico", "Brazil")]
+        [TestCase("Spain", "Canada")]
+        public void StartMatch_WithInProgressHomeOrAwayTeam_ShouldThrowException(string secondHomeTeam, string secondAwayTeam)
         {
-            Assert.Throws<ArgumentException>(() => _scoreboard.StartMatch(null, "Canada"));
-            Assert.Throws<ArgumentException>(() => _scoreboard.StartMatch("Mexico", null));
+            _scoreboard.StartMatch("Mexico", "Canada");
 
+            var ex = Assert.Throws<InvalidOperationException>(() => _scoreboard.StartMatch(secondHomeTeam, secondAwayTeam));
+            Assert.That(ex.Message, Does.Contain("is already in another match"));
         }
 
-        [Test]
-        public void StartMatch_WithEmptyAwayTeam_ShouldThrowException()
+        [TestCase(null, "Canada")]
+        [TestCase("", "Canada")]
+        [TestCase("Mexico", null)]
+        [TestCase("Mexico", "")]
+        public void StartMatch_WithInvalidTeams_ShouldThrowException(string? homeTeam, string? awayTeam)
         {
-            Assert.Throws<ArgumentException>(() => _scoreboard.StartMatch("Mexico", ""));
-            Assert.Throws<ArgumentException>(() => _scoreboard.StartMatch("", "Canada"));
+            var ex = Assert.Throws<ArgumentException>(() => _scoreboard.StartMatch(homeTeam, awayTeam));
+            Assert.That(ex.Message, Does.Contain("team name cannot be null or empty"));
         }
     }
 }
