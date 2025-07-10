@@ -53,6 +53,13 @@ namespace FootballScoreboard.Tests
         }
 
         [Test]
+        public void StartMatch_WithSameHomeAndAwayTeamRegardlessOfCasing_ShouldThrowException()
+        {
+            var ex = Assert.Throws<ArgumentException>(() => _scoreboard.StartMatch("Mexico", "mexico"));
+            Assert.That(ex.Message, Does.Contain("Home and away teams must be different"));
+        }
+
+        [Test]
         public void StartMatch_WithDuplicateHomeAndAwayTeamOfInProgressMatch_ShouldThrowException()
         {
             _scoreboard.StartMatch("Mexico", "Canada");

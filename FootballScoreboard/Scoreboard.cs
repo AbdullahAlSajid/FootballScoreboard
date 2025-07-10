@@ -79,7 +79,7 @@ namespace FootballScoreboard
             if (string.IsNullOrWhiteSpace(awayTeam))
                 throw new ArgumentException("Away team name cannot be null or empty");
 
-            if (homeTeam == awayTeam)
+            if (string.Equals(homeTeam, awayTeam, StringComparison.OrdinalIgnoreCase))
                 throw new ArgumentException("Home and away teams must be different");
         }
 
