@@ -177,5 +177,66 @@ namespace FootballScoreboard.Tests
         #endregion
 
 
+        #region FinishMatch cases
+
+        [Test]
+        public void FinishMatch_WithExistingMatch_ShouldRemoveMatch()
+        {
+            _scoreboard.StartMatch("Mexico", "Canada");
+            _scoreboard.StartMatch("Spain", "Brazil");
+
+            _scoreboard.FinishMatch("Mexico", "Canada");
+
+            var summary = _scoreboard.GetSummary();
+            Assert.That(summary.Count, Is.EqualTo(1));
+            Assert.That(summary[0].HomeTeam, Is.EqualTo("Spain"));
+            Assert.That(summary[0].AwayTeam, Is.EqualTo("Brazil"));
+            Assert.That(summary[0].HomeScore, Is.EqualTo(0));
+            Assert.That(summary[0].AwayScore, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void FinishMatch_WithNonExistentMatch_ShouldThrowException()
+        {
+            var ex = Assert.Throws<InvalidOperationException>(() => _scoreboard.FinishMatch("Mexico", "Canada"));
+            Assert.That(ex.Message, Does.Contain("match doesn't exist"));
+        }
+
+        [Test]
+        public void FinishMatch_WithEmptyScoreboard_ShouldReturnEmptyList()
+        {
+            _scoreboard.StartMatch("Mexico", "Canada");
+
+            _scoreboard.FinishMatch("Mexico", "Canada");
+
+            var summary = _scoreboard.GetSummary();
+            Assert.That(summary.Count, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void FinishMatch_WithDifferentCasing_ShouldRemoveMatch()
+        {
+            _scoreboard.StartMatch("Mexico", "Canada");
+
+            _scoreboard.FinishMatch("mexico", "CANADA");
+
+            var summary = _scoreboard.GetSummary();
+            Assert.That(summary.Count, Is.EqualTo(0));
+        }
+
+        [TestCase(null, "Canada")]
+        [TestCase("", "Canada")]
+        [TestCase("Mexico", null)]
+        [TestCase("Mexico", "")]
+        public void FinishMatch_WithInvalidTeams_ShouldThrowException(string? homeTeam, string? awayTeam)
+        {
+            _scoreboard.StartMatch("Mexico", "Canada");
+
+            var ex = Assert.Throws<ArgumentException>(() => _scoreboard.FinishMatch(homeTeam, awayTeam));
+            Assert.That(ex.Message, Does.Contain("team name cannot be null or empty"));
+        }
+
+        #endregion
+
     }
 }
