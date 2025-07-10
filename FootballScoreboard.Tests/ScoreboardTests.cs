@@ -281,6 +281,13 @@ namespace FootballScoreboard.Tests
             Assert.That(summary[2].AwayTeam, Is.EqualTo("Brazil"));
         }
 
+        [Test]
+        public void GetSummary_WithNoMatches_ShouldReturnEmptyList()
+        {
+            var summary = _scoreboard.GetSummary();
+            Assert.That(summary.Count, Is.EqualTo(0));
+        }
+
         #endregion
     }
 }
