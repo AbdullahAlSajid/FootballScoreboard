@@ -254,33 +254,33 @@ namespace FootballScoreboard.Tests
 
         #region GetSummary cases
 
-        //[Test]
-        //public void GetSummary_ShouldReturnMatchesOrderedByTotalScoreDescending_AndByMostRecentlyStarted()
-        //{
-        //    _scoreboard.StartMatch("Mexico", "Canada");
-        //    _scoreboard.StartMatch("Spain", "Brazil");
-        //    _scoreboard.StartMatch("Germany", "France");
+        [Test]
+        public void GetSummary_ShouldReturnMatchesOrderedByTotalScoreDescending_AndByMostRecentlyStarted()
+        {
+            _scoreboard.StartMatch("Mexico", "Canada");
+            _scoreboard.StartMatch("Spain", "Brazil");
+            _scoreboard.StartMatch("Germany", "France");
 
-        //    _scoreboard.UpdateScore("Mexico", "Canada", 2, 2);    // total 4
-        //    _scoreboard.UpdateScore("Spain", "Brazil", 1, 1);     // total 2
-        //    _scoreboard.UpdateScore("Germany", "France", 2, 2);   // total 4
+            _scoreboard.UpdateScore("Mexico", "Canada", 2, 2);    // totalScore 4
+            _scoreboard.UpdateScore("Spain", "Brazil", 1, 1);     // totalScore 2
+            _scoreboard.UpdateScore("Germany", "France", 2, 2);   // totalScore 4
 
-        //    var summary = _scoreboard.GetSummary();
+            var summary = _scoreboard.GetSummary();
 
-        //    Assert.That(summary.Count, Is.EqualTo(3));
+            Assert.That(summary.Count, Is.EqualTo(3));
 
-        //    // Matches with total 4 should come first, newest first.
-        //    Assert.That(summary[0].HomeTeam, Is.EqualTo("Germany")); //Germany vs France started after Mexico vs Canada
-        //    Assert.That(summary[0].AwayTeam, Is.EqualTo("France"));
+            // Matches with total 4 should come first, newest first.
+            Assert.That(summary[0].HomeTeam, Is.EqualTo("Germany")); //Germany vs France started after Mexico vs Canada
+            Assert.That(summary[0].AwayTeam, Is.EqualTo("France"));
 
-        //    Assert.That(summary[1].HomeTeam, Is.EqualTo("Mexico"));
-        //    Assert.That(summary[1].AwayTeam, Is.EqualTo("Canada"));
+            Assert.That(summary[1].HomeTeam, Is.EqualTo("Mexico"));
+            Assert.That(summary[1].AwayTeam, Is.EqualTo("Canada"));
 
-        //    // Match with total 2 should be last
-        //    Assert.That(summary[2].HomeTeam, Is.EqualTo("Spain"));
-        //    Assert.That(summary[2].AwayTeam, Is.EqualTo("Brazil"));
-        //}
+            // Match with total 2 should be last
+            Assert.That(summary[2].HomeTeam, Is.EqualTo("Spain"));
+            Assert.That(summary[2].AwayTeam, Is.EqualTo("Brazil"));
+        }
 
-        //#endregion
+        #endregion
     }
 }
