@@ -7,6 +7,7 @@ namespace FootballScoreboard
         public string AwayTeam { get; private set; }
         public int HomeScore { get; private set; }
         public int AwayScore { get; private set; }
+        public DateTime StartTime { get; private set; }
 
 
         public Match(string homeTeam, string awayTeam)
@@ -15,6 +16,7 @@ namespace FootballScoreboard
             AwayTeam = awayTeam;
             HomeScore = 0;
             AwayScore = 0;
+            StartTime = DateTime.UtcNow;
         }
         public void UpdateScore(int homeScore, int awayScore)
         {

@@ -49,7 +49,12 @@ namespace FootballScoreboard
 
         public List<Match> GetSummary()
         {
-            return _inProgressMatches;
+            //Matches are ordered by their total score (HomeScore+AwayScore). The matches with the 
+            //same total score will be returned ordered by the most recently started match in the scoreboard.
+
+            var sortedSummary = _inProgressMatches.OrderByDescending(m => m.HomeScore + m.AwayScore).ThenByDescending(m => m.StartTime).ToList();
+
+            return sortedSummary;
         }
 
         private Match? FindMatch(string homeTeam, string awayTeam)
