@@ -43,8 +43,11 @@ namespace FootballScoreboard
         {
             foreach (var match in _inProgressMatches)
             {
-                if (match.HomeTeam == homeTeam && match.AwayTeam == awayTeam)
+                if (string.Equals(match.HomeTeam, homeTeam, StringComparison.OrdinalIgnoreCase) && 
+                    string.Equals(match.AwayTeam, awayTeam, StringComparison.OrdinalIgnoreCase))
+                {
                     return match;
+                }
             }
 
             return null;
@@ -66,12 +69,17 @@ namespace FootballScoreboard
         {
             foreach (var match in _inProgressMatches)
             {
-                if (match.HomeTeam == homeTeam && match.AwayTeam == awayTeam)
+                if (string.Equals(match.HomeTeam, homeTeam, StringComparison.OrdinalIgnoreCase) &&
+                    string.Equals(match.AwayTeam, awayTeam, StringComparison.OrdinalIgnoreCase))
+                {
                     throw new InvalidOperationException("The match is already in progress");
+                }
 
-
-                if (match.HomeTeam == awayTeam && match.AwayTeam == homeTeam)
+                if (string.Equals(match.HomeTeam, awayTeam, StringComparison.OrdinalIgnoreCase) && 
+                    string.Equals(match.AwayTeam, homeTeam, StringComparison.OrdinalIgnoreCase))
+                {
                     throw new InvalidOperationException("Teams are already playing in a match");
+                }
             }
         }
 
@@ -79,11 +87,17 @@ namespace FootballScoreboard
         {
             foreach (var match in _inProgressMatches)
             {
-                if (match.HomeTeam == homeTeam || match.AwayTeam == homeTeam)
+                if (string.Equals(match.HomeTeam, homeTeam, StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(match.AwayTeam, homeTeam, StringComparison.OrdinalIgnoreCase))
+                {
                     throw new InvalidOperationException($"{homeTeam} is already in another match");
+                }
 
-                if (match.HomeTeam == awayTeam || match.AwayTeam == awayTeam)
+                if (string.Equals(match.HomeTeam, awayTeam, StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(match.AwayTeam, awayTeam, StringComparison.OrdinalIgnoreCase))
+                {
                     throw new InvalidOperationException($"{awayTeam} is already in another match");
+                }
             }
         }
 

@@ -105,6 +105,16 @@ namespace FootballScoreboard.Tests
             Assert.That(ex.Message, Does.Contain("Teams are already playing in a match"));
         }
 
+        [TestCase("mexico", "Brazil")]
+        [TestCase("Spain", "canada")]
+        public void StartMatch_WithInProgressHomeOrAwayTeam_WithReversedCasing_ShouldTreatTheTeamAsSame(string secondHomeTeam, string secondAwayTeam)
+        {
+            _scoreboard.StartMatch("Mexico", "Canada");
+
+            var ex = Assert.Throws<InvalidOperationException>(() => _scoreboard.StartMatch(secondHomeTeam, secondAwayTeam));
+            Assert.That(ex.Message, Does.Contain("is already in another match"));
+        }
+
         #endregion
 
 
@@ -151,7 +161,6 @@ namespace FootballScoreboard.Tests
             var ex = Assert.Throws<ArgumentException>(() => _scoreboard.UpdateScore(homeTeam, awayTeam, 1, 0));
             Assert.That(ex.Message, Does.Contain("team name cannot be null or empty"));
         }
-
 
         [Test]
         public void UpdateScore_WithDifferentCasing_ShouldUpdateExistingMatch()
