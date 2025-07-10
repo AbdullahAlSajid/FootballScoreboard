@@ -34,6 +34,19 @@ namespace FootballScoreboard
             match.UpdateScore(homeScore, awayScore);
         }
 
+        public void FinishMatch(string homeTeam, string awayTeam)
+        {
+            ValidateTeamNames(homeTeam, awayTeam);
+
+            var match = FindMatch(homeTeam, awayTeam);
+            if (match == null)
+            {
+                throw new InvalidOperationException("The match doesn't exist");
+            }
+
+            _inProgressMatches.Remove(match);
+        }
+
         public List<Match> GetSummary()
         {
             return _inProgressMatches;
